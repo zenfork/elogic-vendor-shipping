@@ -109,8 +109,13 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
 //            $vendors[$id]['vendors_data'] = $this->vendorHelperData->getVendorsByIds($product->getData(Data::VENDOR_ATTR))->getData();
         }
 
-        $ids_intersected_for_each_product = call_user_func_array('array_intersect', $vendors_id);
-        $vendors_data = $this->vendorHelperData->getVendorsByIds($ids_intersected_for_each_product)->getData();
+        if (count($vendors_id) > 1) {
+            $vendors_id = call_user_func_array('array_intersect', $vendors_id);
+        } else {
+            $vendors_id = reset($vendors_id);
+        }
+
+        $vendors_data = $this->vendorHelperData->getVendorsByIds($vendors_id)->getData();
 
 //        $searchCriteria = $this->searchCriteriaBuilder->create();
 //        $attributeRepository = $this->vendorRepository->getList(
