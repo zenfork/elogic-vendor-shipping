@@ -38,27 +38,12 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
      */
     protected $_rateMethodFactory;
     /**
-     * @var Data
-     */
-    private $vendorHelperData;
-    /**
-     * @var \Elogic\Vendor\Api\VendorRepositoryInterface
-     */
-    private $vendorRepository;
-    /**
-     * @var \Magento\Framework\Api\SearchCriteriaBuilder
-     */
-    protected $searchCriteriaBuilder;
-
-    /**
      * VendorShipping constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
      * @param \Psr\Log\LoggerInterface $logger
      * @param \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory
      * @param \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory
-     * @param Data $vendorHelperData
-     * @param \Elogic\Vendor\Api\VendorRepositoryInterface $vendorRepository
      * @param array $data
      */
     public function __construct(
@@ -68,15 +53,11 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
         \Psr\Log\LoggerInterface $logger,
         \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
         \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
-        \Elogic\Vendor\Helper\Data $vendorHelperData,
-        \Elogic\Vendor\Api\VendorRepositoryInterface $vendorRepository,
         array $data = []
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->_rateResultFactory = $rateResultFactory;
         $this->_rateMethodFactory = $rateMethodFactory;
-        $this->vendorHelperData = $vendorHelperData;
-        $this->vendorRepository = $vendorRepository;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 
@@ -92,91 +73,18 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
         /** @var \Magento\Shipping\Model\Rate\Result $result */
         $result = $this->_rateResultFactory->create();
 
-        // Getting vendors from attribute
-
-        $simpleItems = $this->getAllSimpleItems($request);
-        $vendors_id = [];
-
-        foreach ($simpleItems as $id => $item) {
-            $product = $item->getProduct();
-//            $product->load($item->getProduct()->getId(), [Data::VENDOR_ATTR]);
-            $product->getResource()->load($product, $item->getProduct()->getId(), [Data::VENDOR_ATTR]);
-
-            $vendorRepository = $this->vendorRepository;
-//            $rep_ids[] = $vendorRepository->getById();
-
-            $vendors_id[] = explode(',', $product->getData(Data::VENDOR_ATTR));
-//            $vendors[$id]['vendors_data'] = $this->vendorHelperData->getVendorsByIds($product->getData(Data::VENDOR_ATTR))->getData();
-        }
-
-        if (count($vendors_id) > 1) {
-            $vendors_id = call_user_func_array('array_intersect', $vendors_id);
-        } else {
-            $vendors_id = reset($vendors_id);
-        }
-
-        $vendors_data = $this->vendorHelperData->getVendorsByIds($vendors_id)->getData();
-
-//        $searchCriteria = $this->searchCriteriaBuilder->create();
-//        $attributeRepository = $this->vendorRepository->getList(
-//            $searchCriteria
-//        );
-//
-//        foreach ($attributeRepository->getItems() as $id => $items) {
-//            $attr[$id]['attr_code'] = $items->getAttributeCode();
-//            $attr[$id]['fr_label'] = $items->getFrontendLabel();
-//        }
-
-//        static methods
-
-//        $this->appendMethodToRateResult(self::VENDOR_SHIPPING_STANDARD, $result);
+        $this->appendMethodToRateResult(self::VENDOR_SHIPPING_STANDARD, $result);
 //        $this->appendMethodToRateResult(self::VENDOR_SHIPPING_48H, $result);
 
-        foreach ($vendors_data as $vendor_data) {
-            $this->appendMethodToRateResult(
-                "vendor_" . $vendor_data['id'],
-                $result,
-                [
-                    'name' => $vendor_data['name'],
-                    'price' => '7.99',
-                    'cost' => '7.10'
-                ]
-            );
-        }
         return $result;
     }
-
-    /**
-     * Get configurable and single prod
-     *
-     * @param RateRequest $request
-     * @return array
-     */
-    public function getAllSimpleItems(RateRequest $request) {
-        $items = [];
-        if ($request->getAllItems()) {
-            foreach ($request->getAllItems() as $item) {
-                /* @var $item \Magento\Quote\Model\Quote\Item */
-                if ($item->getProduct()->isVirtual() || $item->getParentItem()
-                    || $item->getHasChildren() && $item->isShipSeparately()) {
-                    // Continue has children, virtual items, and ship separately
-                    continue;
-                } else {
-                    // Ship together - count compound item as one solid
-                    $items[] = $item;
-                }
-            }
-        }
-        return $items;
-    }
-
     /**
      * @return array
      */
     public function getAllowedMethods() {
         return [
             self::VENDOR_SHIPPING_STANDARD => $this->getConfigData(self::VENDOR_SHIPPING_STANDARD . '/title'),
-            self::VENDOR_SHIPPING_48H => $this->getConfigData(self::VENDOR_SHIPPING_48H . '/title'),
+//            self::VENDOR_SHIPPING_48H => $this->getConfigData(self::VENDOR_SHIPPING_48H . '/title'),
         ];
     }
 
@@ -207,24 +115,17 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
     /**
      * @param string $methodName
      * @param \Magento\Shipping\Model\Rate\Result $result
-     * @param bool $customMethod
      * @return \Magento\Shipping\Model\Rate\Result
      */
-    private function appendMethodToRateResult($methodName, $result, $customMethod = []) {
+    private function appendMethodToRateResult($methodName, $result) {
         /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
         $method = $this->_rateMethodFactory->create();
         $method->setCarrier($this->_code);
         $method->setCarrierTitle($this->getConfigData('title'));
         $method->setMethod($methodName);
-        $method->setMethodTitle(
-            empty($customMethod['name']) ? $this->getMethodTitle($method->getMethod()) : $customMethod['name']
-        );
-        $method->setPrice(
-            empty($customMethod['price']) ? $this->getMethodPrice($method->getMethod()) : $customMethod['price']
-        );
-        $method->setCost(
-            empty($customMethod['cost']) ? $this->getMethodCost($method->getMethod()) : $customMethod['cost']
-        );
+        $method->setMethodTitle($this->getMethodTitle($method->getMethod()));
+        $method->setPrice($this->getMethodPrice($method->getMethod()));
+        $method->setCost($this->getMethodCost($method->getMethod()));
         $method->setErrorMessage(__('The %1 method error message here.'));
         return $result->append($method);
     }

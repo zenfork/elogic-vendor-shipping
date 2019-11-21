@@ -1,0 +1,16 @@
+<div id="my-carrier-custom-block-wrapper" data-bind="visible: selectedMethod() == 'vendorshipping_vendorshippingstandard'">
+    <!-- ko if: (getVendors())-->
+    <ul data-bind="foreach: getVendors()">
+        <li>
+            <strong><span data-bind="text: name"> </span></strong>
+            <!-- ko if: (description)-->
+            <span>has description <i><span data-bind='text: description'>&nbsp;</span></i></span>
+            <!-- /ko -->
+            <!-- ko ifnot: (description)-->
+            <span>hasn't description</span>
+            <!-- /ko -->
+        </li>
+    </ul>
+    <!-- /ko -->
+    <p data-bind="i18n: 'This is custom block shown only when selected specific method'"></p>
+</div>
