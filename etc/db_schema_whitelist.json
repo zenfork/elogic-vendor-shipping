@@ -1,0 +1,14 @@
+{
+    "elogic_vendor_shipping": {
+        "column": {
+            "id": true,
+            "order_id": true,
+            "vendor_id": true
+        },
+        "constraint": {
+            "ELOGIC_VENDOR_SHIPPING_VENDOR_ID_ELOGIC_VENDORS_ID": true,
+            "ELOGIC_VENDOR_SHIPPING_ID_ORDER_ID": true,
+            "PRIMARY": true
+        }
+    }
+}
