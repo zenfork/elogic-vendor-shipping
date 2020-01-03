@@ -1,13 +1,25 @@
 {
-    "elogic_vendor_shipping": {
+    "elogic_quote_vendor_shipping": {
+        "column": {
+            "id": true,
+            "quote_id": true,
+            "vendor_id": true
+        },
+        "constraint": {
+            "ELOGIC_QUOTE_VENDOR_SHIPPING_VENDOR_ID_ELOGIC_VENDORS_ID": true,
+            "ELOGIC_QUOTE_VENDOR_SHIPPING_ID_QUOTE_ID": true,
+            "PRIMARY": true
+        }
+    },
+    "elogic_order_vendor_shipping": {
         "column": {
             "id": true,
             "order_id": true,
             "vendor_id": true
         },
         "constraint": {
-            "ELOGIC_VENDOR_SHIPPING_VENDOR_ID_ELOGIC_VENDORS_ID": true,
-            "ELOGIC_VENDOR_SHIPPING_ID_ORDER_ID": true,
+            "ELOGIC_ORDER_VENDOR_SHIPPING_VENDOR_ID_ELOGIC_VENDORS_ID": true,
+            "ELOGIC_ORDER_VENDOR_SHIPPING_ID_ORDER_ID": true,
             "PRIMARY": true
         }
     }

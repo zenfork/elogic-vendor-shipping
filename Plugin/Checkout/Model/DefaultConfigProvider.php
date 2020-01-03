@@ -64,8 +64,8 @@ class DefaultConfigProvider
         $items = $result['totalsData']['items'];
         foreach ($items as $index => $item) {
             $quoteItem = $this->checkoutSession->getQuote()->getItemById($item['item_id']);
-            $vendors_id[] = $quoteItem->getProduct()
-                ->getData('elogic_vendor');
+            $vendors_id[] = explode(',', $quoteItem->getProduct()
+                ->getData('elogic_vendor'));
         }
         if (count($vendors_id) > 1) {
             $vendors_id = call_user_func_array('array_intersect', $vendors_id);
@@ -77,7 +77,7 @@ class DefaultConfigProvider
             ->create();
         $repo = $this->vendorRepository->getList($searchCriteria);
         foreach ($repo->getItems() as $item) {
-            $result['totalsData']['vendors'][] = $item->getData();
+            $result['vendors'][] = $item->getData();
         }
 
         // Media URL

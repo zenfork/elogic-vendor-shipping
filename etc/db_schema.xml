@@ -1,12 +1,26 @@
 <?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
-    <table name="elogic_vendor_shipping" resource="default" engine="innodb"
+    <table name="elogic_quote_vendor_shipping" resource="default" engine="innodb"
+           comment="Elogic Vendor Shipping: Quote to Vendor relation">
+        <column xsi:type="int" name="id" padding="11" unsigned="true" nullable="false" identity="true" comment="Order:Vendor id"/>
+        <column xsi:type="int" name="quote_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Quote id"/>
+        <column xsi:type="int" name="vendor_id"  padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Vendor id"/>
+        <constraint xsi:type="foreign" referenceId="ELOGIC_QUOTE_VENDOR_SHIPPING_VENDOR_ID_ELOGIC_VENDORS_ID" table="elogic_vendor_shipping" column="vendor_id" referenceTable="elogic_vendors" referenceColumn="id" onDelete="NO ACTION"/>
+        <constraint xsi:type="unique" referenceId="ELOGIC_QUOTE_VENDOR_SHIPPING_ID_ORDER_ID">
+            <column name="id"/>
+            <column name="quote_id"/>
+        </constraint>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <table name="elogic_order_vendor_shipping" resource="default" engine="innodb"
            comment="Elogic Vendor Shipping: Order to Vendor relation">
         <column xsi:type="int" name="id" padding="11" unsigned="true" nullable="false" identity="true" comment="Order:Vendor id"/>
         <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Order id"/>
         <column xsi:type="int" name="vendor_id"  padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Vendor id"/>
-        <constraint xsi:type="foreign" referenceId="ELOGIC_VENDOR_SHIPPING_VENDOR_ID_ELOGIC_VENDORS_ID" table="elogic_vendor_shipping" column="vendor_id" referenceTable="elogic_vendors" referenceColumn="id" onDelete="NO ACTION"/>
-        <constraint xsi:type="unique" referenceId="ELOGIC_VENDOR_SHIPPING_ID_ORDER_ID">
+        <constraint xsi:type="foreign" referenceId="ELOGIC_ORDER_VENDOR_SHIPPING_VENDOR_ID_ELOGIC_VENDORS_ID" table="elogic_vendor_shipping" column="vendor_id" referenceTable="elogic_vendors" referenceColumn="id" onDelete="NO ACTION"/>
+        <constraint xsi:type="unique" referenceId="ELOGIC_ORDER_VENDOR_SHIPPING_ID_ORDER_ID">
             <column name="id"/>
             <column name="order_id"/>
         </constraint>

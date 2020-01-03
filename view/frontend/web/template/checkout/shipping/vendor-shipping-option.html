@@ -1,4 +1,4 @@
-<div id="my-carrier-custom-block-wrapper" data-bind="visible: selectedMethod() == 'vendorshipping_vendorshippingstandard'">
+<div id="additional-shipping-option-wrapper" data-bind="visible: selectedMethod() == 'vendorshipping_vendorshippingstandard'">
     <!-- ko if: (getVendors())-->
     <ul data-bind="foreach: getVendors()">
         <li>
@@ -12,5 +12,8 @@
         </li>
     </ul>
     <!-- /ko -->
-    <p data-bind="i18n: 'This is custom block shown only when selected specific method'"></p>
+    <div class="step-title" data-role="title" data-bind="i18n: 'Choose vendor'"></div>
+    <!-- ko foreach: element.getRegion('additionalShippingOptionField') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    <!--/ko-->
 </div>

@@ -1,32 +1,45 @@
-define([
+;define([
     'jquery',
     'ko',
     'uiComponent',
     'Magento_Checkout/js/model/quote'
 ], function ($, ko, Component, quote) {
     'use strict';
-    var checkoutConfig = window.checkoutConfig;
+
     return Component.extend({
         defaults: {
-            template: 'Elogic_VendorShipping/checkout/shipping/carrier_custom'
+            template: 'Elogic_VendorShipping/checkout/shipping/vendor-shipping-option'
         },
 
         initObservable: function () {
+            // returns our original component which we extend
+            var self = this._super();
 
             this.selectedMethod = ko.computed(function() {
                 var method = quote.shippingMethod();
                 var selectedMethod = method != null ? method.carrier_code + '_' + method.method_code : null;
-                var quoteData = quote.getItems();
-                var quoteVendors = checkoutConfig.totalsData.vendors;
+                // var quoteData = quote.getItems();
+                // var quoteVendors = checkoutConfig.vendors;
 
                 return selectedMethod;
+            }, this);
+
+            this.showAdditionalOption = ko.computed(function() {
+                var method = quote.shippingMethod();
+
+                if (method && method['carrier_code'] !== undefined) {
+                    return true;
+                }
+
+                return false;
+
             }, this);
 
             return this;
         },
 
         getVendors: function() {
-            var vendors = checkoutConfig.totalsData.vendors;
+            var vendors = checkoutConfig.vendors;
             return vendors;
         },
 

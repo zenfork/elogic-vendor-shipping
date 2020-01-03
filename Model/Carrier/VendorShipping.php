@@ -1,5 +1,6 @@
 <?php
 namespace Elogic\VendorShipping\Model\Carrier;
+
 use Elogic\Vendor\Helper\Data;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 
@@ -13,30 +14,37 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
      * Carrier code
      */
     const CARRIER_CODE = 'vendorshipping';
+
     /**
      * Vendor shipping standard code
      */
     const VENDOR_SHIPPING_STANDARD = 'vendorshippingstandard';
+
     /**
      * Vendor shipping 48h code
      */
     const VENDOR_SHIPPING_48H = 'vendorshipping48h';
+
     /**
      * @var string
      */
     protected $_code = self::CARRIER_CODE;
+
     /**
      * @var bool
      */
     protected $_isFixed = true;
+
     /**
      * @var \Magento\Shipping\Model\Rate\ResultFactory
      */
     protected $_rateResultFactory;
+
     /**
      * @var \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory
      */
     protected $_rateMethodFactory;
+
     /**
      * VendorShipping constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -78,6 +86,7 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
 
         return $result;
     }
+
     /**
      * @return array
      */
