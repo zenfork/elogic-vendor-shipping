@@ -2,8 +2,8 @@
 
 namespace Elogic\VendorShipping\Model;
 
-use \Magento\Framework\Model\AbstractModel;
-use \Elogic\VendorShipping\Api\Data\QuoteVendorShippingInterface;
+use Magento\Framework\Model\AbstractModel;
+use Elogic\VendorShipping\Api\Data\QuoteVendorShippingInterface;
 
 class QuoteVendorShipping extends AbstractModel implements QuoteVendorShippingInterface
 {

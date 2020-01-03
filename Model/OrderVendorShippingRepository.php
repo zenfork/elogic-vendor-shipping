@@ -3,7 +3,7 @@
 namespace Elogic\VendorShipping\Model;
 
 use Elogic\VendorShipping\Api\OrderVendorShippingRepositoryInterface;
-use Elogic\VendorShipping\Model\ResourceModel\QuoteVendorShipping as VendorShippingResource;
+use Elogic\VendorShipping\Model\ResourceModel\OrderVendorShipping as OrderVendorShippingResource;
 use Elogic\VendorShipping\Model\OrderVendorShippingFactory;
 use Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface;
 
@@ -14,7 +14,7 @@ use Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface;
 class OrderVendorShippingRepository implements OrderVendorShippingRepositoryInterface
 {
     /**
-     * @var VendorShippingResource
+     * @var OrderVendorShippingResource
      */
     private $resource;
 
@@ -25,11 +25,11 @@ class OrderVendorShippingRepository implements OrderVendorShippingRepositoryInte
 
     /**
      * OrderVendorShippingRepository constructor.
-     * @param VendorShippingResource $resource
+     * @param OrderVendorShippingResource $resource
      * @param OrderVendorShippingFactory $orderVendorShippingFactory
      */
     public function __construct(
-        VendorShippingResource $resource,
+        OrderVendorShippingResource $resource,
         OrderVendorShippingFactory $orderVendorShippingFactory
     )
     {

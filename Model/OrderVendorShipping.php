@@ -2,8 +2,8 @@
 
 namespace Elogic\VendorShipping\Model;
 
-use \Magento\Framework\Model\AbstractModel;
-use \Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface;
+use Magento\Framework\Model\AbstractModel;
+use Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface;
 
 class OrderVendorShipping extends AbstractModel implements OrderVendorShippingInterface
 {
