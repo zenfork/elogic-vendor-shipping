@@ -3,9 +3,9 @@
 namespace Elogic\VendorShipping\Model;
 
 use Elogic\VendorShipping\Api\QuoteVendorShippingRepositoryInterface;
+use Elogic\VendorShipping\Api\Data\QuoteVendorShippingInterface;
 use Elogic\VendorShipping\Model\ResourceModel\QuoteVendorShipping as QuoteVendorShippingResource;
 use Elogic\VendorShipping\Model\QuoteVendorShippingFactory;
-use Elogic\VendorShipping\Api\Data\QuoteVendorShippingInterface;
 
 /**
  * Class QuoteVendorShippingRepository
@@ -24,7 +24,7 @@ class QuoteVendorShippingRepository implements QuoteVendorShippingRepositoryInte
     private $quoteVendorShippingFactory;
 
     /**
-     * OrderVendorShippingRepository constructor.
+     * QuoteVendorShippingRepository constructor.
      * @param QuoteVendorShippingResource $resource
      * @param QuoteVendorShippingFactory $quoteVendorShippingFactory
      */

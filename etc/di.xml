@@ -12,11 +12,11 @@
     </type>
     <!-- Saving ext. attributes to quote via plugin -->
     <type name="Magento\Checkout\Model\ShippingInformationManagement">
-        <plugin name="vendor_shipping_attribute" type="Elogic\VendorShipping\Plugin\Quote\Model\SaveToQuote" sortOrder="10" />
+        <plugin name="vendor_shipping_attribute" type="Elogic\VendorShipping\Plugin\Checkout\Model\ShippingInformationManagementPlugin" sortOrder="10" />
     </type>
     <!-- To order -->
     <type name="Magento\Sales\Api\OrderRepositoryInterface">
-        <plugin name="save_shipping_attribute" type="Elogic\VendorShipping\Plugin\Order\Model\OrderSave" />
-        <plugin name="get_shipping_attribute" type="Elogic\VendorShipping\Plugin\Order\Model\OrderGet" />
+        <plugin name="save_vendor_shipping_attribute" type="Elogic\VendorShipping\Plugin\Order\Model\OrderSave" />
+        <plugin name="get_vendor_shipping_attribute" type="Elogic\VendorShipping\Plugin\Order\Model\OrderGet" />
     </type>
 </config>

@@ -1,6 +1,6 @@
 <?php
 
-namespace Elogic\VendorShipping\Plugin\Quote\Model;
+namespace Elogic\VendorShipping\Plugin\Checkout\Model;
 
 use Magento\Quote\Model\QuoteRepository;
 use Elogic\VendorShipping\Api\QuoteVendorShippingRepositoryInterface;
@@ -9,7 +9,7 @@ use Elogic\VendorShipping\Api\QuoteVendorShippingRepositoryInterface;
  * Class ShippingInformationManagementPlugin
  * @package Elogic\VendorShipping\Model\Checkout
  */
-class SaveToQuote
+class ShippingInformationManagementPlugin
 {
     protected $quoteRepository;
     protected $quoteVendorShippingRepository;
@@ -43,24 +43,35 @@ class SaveToQuote
         if(!$extAttributes = $addressInformation->getExtensionAttributes())
             return;
 
-        $vendorShipping = $extAttributes->getQuoteVendorShipping();
+        $vendorShipping = $extAttributes->getVendorShipping();
         $vendorId = $vendorShipping->getVendorId();
 
         $quote = $this->quoteRepository->getActive($cartId);
         $quoteId = $quote->getEntityId();
 
         // if quote already exist
-        if ($this->quoteVendorShippingRepository->getByQuoteId($quoteId)) {
+        if ($this->quoteVendorShippingRepository->getByQuoteId($quoteId)->getQuoteId() > 0) {
             $vendorShipping = $this->quoteVendorShippingRepository->getByQuoteId($quoteId);
         } else {
             $vendorShipping->setQuoteId($quoteId);
         }
 
         $vendorShipping->setVendorId($vendorId);
+//        $extAttributes->setCheckoutVendorShipping($vendorShipping);
 
-        $extAttributes->setQuoteVendorShipping($vendorShipping);
         $this->quoteVendorShippingRepository->save($vendorShipping);
 
-//        $this->quoteRepository->save($quote);
+        // set ext attr to quote
+//        if(!$extAttributes = $quote->getExtensionAttributes())
+//            return;
+
+        /*
+        $extAttributes = $quote->getExtensionAttributes();
+        $vendorShipping = $extAttributes->getVendorShipping();
+        $vendorShipping->setVendorId($vendorId);
+        $quote->setExtensionAttributes($extAttributes);
+
+        $this->quoteRepository->save($quote);
+        */
     }
 }

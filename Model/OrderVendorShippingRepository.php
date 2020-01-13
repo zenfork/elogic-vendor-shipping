@@ -3,9 +3,9 @@
 namespace Elogic\VendorShipping\Model;
 
 use Elogic\VendorShipping\Api\OrderVendorShippingRepositoryInterface;
+use Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface;
 use Elogic\VendorShipping\Model\ResourceModel\OrderVendorShipping as OrderVendorShippingResource;
 use Elogic\VendorShipping\Model\OrderVendorShippingFactory;
-use Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface;
 
 /**
  * Class OrderVendorShippingRepository

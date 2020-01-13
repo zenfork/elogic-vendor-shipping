@@ -6,6 +6,8 @@ use Elogic\VendorShipping\Api\OrderVendorShippingRepositoryInterface;
 use Elogic\VendorShipping\Api\QuoteVendorShippingRepositoryInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NotFoundException;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 
 class OrderSave
 {
@@ -22,8 +24,8 @@ class OrderSave
     }
 
     public function afterSave(
-        \Magento\Sales\Api\OrderRepositoryInterface $subject,
-        \Magento\Sales\Api\Data\OrderInterface $resultOrder
+        OrderRepositoryInterface $subject,
+        OrderInterface $resultOrder
     ) {
         try {
             $resultOrder = $this->saveVendorShippingAttribute($resultOrder);
@@ -34,26 +36,22 @@ class OrderSave
         return $resultOrder;
     }
 
-    private function saveVendorShippingAttribute(\Magento\Sales\Api\Data\OrderInterface $order)
+    private function saveVendorShippingAttribute(OrderInterface $order)
     {
         $extensionAttributes = $order->getExtensionAttributes();
         if (
-            null !== $extensionAttributes &&
-            null !== $extensionAttributes->getOrderVendorShipping()
+            null !== $extensionAttributes
+            && null !== $extensionAttributes->getVendorShipping()
         ) {
             $quoteRepositoryByOrder = $this->quoteVendorShippingRepository->getByQuoteId($order->getQuoteId());
-
             $vendorId = $quoteRepositoryByOrder->getVendorId();
+            $orderVendorShipping = $extensionAttributes->getVendorShipping();
 
-            $orderVendorShipping = $extensionAttributes->getOrderVendorShipping();
-
-            // Vendor and Order set
+            // Set Vendor and Order
             $orderVendorShipping->setVendorId($vendorId);
             $orderVendorShipping->setOrderId($order->getEntityId());
 
             try {
-                // The actual implementation of the repository is omitted
-                // but it is where you would save to the database (or any other persistent storage)
                 $this->orderVendorShippingRepository->save($orderVendorShipping);
             } catch (\Exception $e) {
                 throw new CouldNotSaveException(

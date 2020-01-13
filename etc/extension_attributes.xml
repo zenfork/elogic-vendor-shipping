@@ -2,11 +2,14 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
     <extension_attributes for="Magento\Checkout\Api\Data\ShippingInformationInterface">
-        <!--for="Magento\Checkout\Api\Data\ShippingInformationInterface"-->
-        <!--for="Magento\Sales\Api\Data\OrderInterface"-->
-        <attribute code="quote_vendor_shipping" type="Elogic\VendorShipping\Api\Data\QuoteVendorShippingInterface" />
+        <attribute code="vendor_shipping" type="Elogic\VendorShipping\Api\Data\QuoteVendorShippingInterface" />
     </extension_attributes>
+    <!--
+    <extension_attributes for="Magento\Quote\Api\Data\CartInterface">
+        <attribute code="vendor_shipping" type="Elogic\VendorShipping\Api\Data\QuoteVendorShippingInterface" />
+    </extension_attributes>
+    -->
     <extension_attributes for="Magento\Sales\Api\Data\OrderInterface">
-        <attribute code="order_vendor_shipping" type="Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface" />
+        <attribute code="vendor_shipping" type="Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface" />
     </extension_attributes>
 </config>

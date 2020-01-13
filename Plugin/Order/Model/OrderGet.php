@@ -37,8 +37,6 @@ class OrderGet
     private function getVendorShippingAttribute(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         try {
-            // The actual implementation of the repository is omitted
-            // but it is where you would load your value from the database (or any other persistent storage)
             $vendorShippingRepository = $this->vendorShippingRepository->getByOrderId($order->getEntityId());
         } catch (NoSuchEntityException $e) {
             return $order;
@@ -48,11 +46,11 @@ class OrderGet
         $orderExtension = $extensionAttributes ? $extensionAttributes : $this->orderExtensionFactory->create();
         $vendorShippingAttribute = $this->orderVendorShippingFactory->create();
 
-        $vendorId = $vendorShippingRepository->getVendorId();
-
-        $vendorShippingAttribute->setVendorId($vendorId);
-        $orderExtension->setOrderVendorShipping($vendorShippingAttribute);
-        $order->setExtensionAttributes($orderExtension);
+        if ($vendorId = $vendorShippingRepository->getVendorId()) {
+            $vendorShippingAttribute->setVendorId($vendorId);
+            $orderExtension->setVendorShipping($vendorShippingAttribute);
+            $order->setExtensionAttributes($orderExtension);
+        }
 
         return $order;
     }
