@@ -7,13 +7,34 @@ use Elogic\VendorShipping\Model\OrderVendorShippingFactory;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderExtensionFactory;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 
-class OrderGet
+/**
+ * Class OrderGetPlugin
+ * @package Elogic\VendorShipping\Plugin\Order\Model
+ */
+class OrderGetPlugin
 {
+    /**
+     * @var OrderVendorShippingRepositoryInterface
+     */
     private $vendorShippingRepository;
+    /**
+     * @var OrderVendorShippingFactory
+     */
     private $orderVendorShippingFactory;
+    /**
+     * @var OrderExtensionFactory
+     */
     private $orderExtensionFactory;
 
+    /**
+     * OrderGetPlugin constructor.
+     * @param OrderVendorShippingRepositoryInterface $vendorShippingRepository
+     * @param OrderVendorShippingFactory $orderVendorShippingFactory
+     * @param OrderExtensionFactory $orderExtensionFactory
+     */
     public function __construct(
         OrderVendorShippingRepositoryInterface $vendorShippingRepository,
         OrderVendorShippingFactory $orderVendorShippingFactory,
@@ -25,16 +46,25 @@ class OrderGet
         $this->orderExtensionFactory = $orderExtensionFactory;
     }
 
+    /**
+     * @param OrderRepositoryInterface $subject
+     * @param OrderInterface $resultOrder
+     * @return OrderInterface
+     */
     public function afterGet(
-        \Magento\Sales\Api\OrderRepositoryInterface $subject,
-        \Magento\Sales\Api\Data\OrderInterface $resultOrder
+        OrderRepositoryInterface $subject,
+        OrderInterface $resultOrder
     ) {
         $resultOrder = $this->getVendorShippingAttribute($resultOrder);
 
         return $resultOrder;
     }
 
-    private function getVendorShippingAttribute(\Magento\Sales\Api\Data\OrderInterface $order)
+    /**
+     * @param OrderInterface $order
+     * @return OrderInterface
+     */
+    private function getVendorShippingAttribute(OrderInterface $order)
     {
         try {
             $vendorShippingRepository = $this->vendorShippingRepository->getByOrderId($order->getEntityId());

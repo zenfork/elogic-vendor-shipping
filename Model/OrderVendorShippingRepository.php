@@ -39,7 +39,7 @@ class OrderVendorShippingRepository implements OrderVendorShippingRepositoryInte
 
     /**
      * @param int $id
-     * @return \Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface
+     * @return OrderVendorShippingInterface
      */
     public function getById($id)
     {
@@ -49,9 +49,9 @@ class OrderVendorShippingRepository implements OrderVendorShippingRepositoryInte
     }
 
     /**
-     * @param \Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface $vendorShippingAttribute
+     * @param OrderVendorShippingInterface $vendorShippingAttribute
      * @return OrderVendorShippingRepository
-     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Exception
      */
     public function save(OrderVendorShippingInterface $vendorShippingAttribute)
     {
@@ -60,7 +60,7 @@ class OrderVendorShippingRepository implements OrderVendorShippingRepositoryInte
     }
 
     /**
-     * @param \Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface $vendorShippingAttribute
+     * @param OrderVendorShippingInterface $vendorShippingAttribute
      * @return OrderVendorShippingRepository
      * @throws \Exception
      */
@@ -72,9 +72,10 @@ class OrderVendorShippingRepository implements OrderVendorShippingRepositoryInte
 
     /**
      * @param integer $orderId
-     * @return \Elogic\VendorShipping\Api\Data\OrderVendorShippingInterface
+     * @return OrderVendorShippingInterface
      */
-    public function getByOrderId($orderId){
+    public function getByOrderId($orderId)
+    {
         $vendorShippingAttribute = $this->orderVendorShippingFactory->create();
         $this->resource->load($vendorShippingAttribute, $orderId, 'order_id');
         return $vendorShippingAttribute;

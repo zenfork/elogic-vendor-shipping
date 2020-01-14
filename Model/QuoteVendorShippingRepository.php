@@ -39,7 +39,7 @@ class QuoteVendorShippingRepository implements QuoteVendorShippingRepositoryInte
 
     /**
      * @param int $id
-     * @return \Elogic\VendorShipping\Api\Data\QuoteVendorShippingInterface
+     * @return QuoteVendorShippingInterface
      */
     public function getById($id)
     {
@@ -49,9 +49,9 @@ class QuoteVendorShippingRepository implements QuoteVendorShippingRepositoryInte
     }
 
     /**
-     * @param \Elogic\VendorShipping\Api\Data\QuoteVendorShippingInterface $vendorShippingAttribute
+     * @param QuoteVendorShippingInterface $vendorShippingAttribute
      * @return QuoteVendorShippingRepository
-     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Exception
      */
     public function save(QuoteVendorShippingInterface $vendorShippingAttribute)
     {
@@ -60,7 +60,7 @@ class QuoteVendorShippingRepository implements QuoteVendorShippingRepositoryInte
     }
 
     /**
-     * @param \Elogic\VendorShipping\Api\Data\QuoteVendorShippingInterface $vendorShippingAttribute
+     * @param QuoteVendorShippingInterface $vendorShippingAttribute
      * @return QuoteVendorShippingRepository
      * @throws \Exception
      */
@@ -72,7 +72,7 @@ class QuoteVendorShippingRepository implements QuoteVendorShippingRepositoryInte
 
     /**
      * @param integer $quoteId
-     * @return \Elogic\VendorShipping\Api\Data\QuoteVendorShippingInterface
+     * @return QuoteVendorShippingInterface
      */
     public function getByQuoteId($quoteId){
         $vendorShippingAttribute = $this->quoteVendorShippingFactory->create();

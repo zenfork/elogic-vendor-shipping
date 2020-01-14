@@ -2,6 +2,9 @@
 
 namespace Elogic\VendorShipping\Plugin\Checkout\Model;
 
+use Magento\Checkout\Api\Data\ShippingInformationInterface;
+use Magento\Checkout\Model\ShippingInformationManagement;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\QuoteRepository;
 use Elogic\VendorShipping\Api\QuoteVendorShippingRepositoryInterface;
 
@@ -28,16 +31,15 @@ class ShippingInformationManagementPlugin
     }
 
     /**
-     * @param \Magento\Checkout\Model\ShippingInformationManagement $subject
+     * @param ShippingInformationManagement $subject
      * @param $cartId
-     * @param \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @param ShippingInformationInterface $addressInformation
+     * @throws NoSuchEntityException
      */
     public function beforeSaveAddressInformation(
-        \Magento\Checkout\Model\ShippingInformationManagement $subject,
+        ShippingInformationManagement $subject,
         $cartId,
-        \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation
+        ShippingInformationInterface $addressInformation
     )
     {
         if(!$extAttributes = $addressInformation->getExtensionAttributes())
@@ -49,7 +51,7 @@ class ShippingInformationManagementPlugin
         $quote = $this->quoteRepository->getActive($cartId);
         $quoteId = $quote->getEntityId();
 
-        // if quote already exist
+        // If Quote already exist
         if ($this->quoteVendorShippingRepository->getByQuoteId($quoteId)->getQuoteId() > 0) {
             $vendorShipping = $this->quoteVendorShippingRepository->getByQuoteId($quoteId);
         } else {
@@ -57,21 +59,7 @@ class ShippingInformationManagementPlugin
         }
 
         $vendorShipping->setVendorId($vendorId);
-//        $extAttributes->setCheckoutVendorShipping($vendorShipping);
 
         $this->quoteVendorShippingRepository->save($vendorShipping);
-
-        // set ext attr to quote
-//        if(!$extAttributes = $quote->getExtensionAttributes())
-//            return;
-
-        /*
-        $extAttributes = $quote->getExtensionAttributes();
-        $vendorShipping = $extAttributes->getVendorShipping();
-        $vendorShipping->setVendorId($vendorId);
-        $quote->setExtensionAttributes($extAttributes);
-
-        $this->quoteRepository->save($quote);
-        */
     }
 }

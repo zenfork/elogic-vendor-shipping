@@ -41,7 +41,6 @@
         updateDropdownValues: function(method) {
             var quoteVendors = checkoutConfig.vendors;
             var vendorsCollection = [];
-            // var valuesCollection = [];
 
             quoteVendors.forEach (function(vendor) {
                 vendorsCollection.push({
@@ -49,38 +48,6 @@
                     value: vendor.id
                 })
             });
-
-            // if(method['carrier_code'] == 'freeshipping'){
-            //     valuesCollection = [
-            //         {
-            //             label: 'Monday',
-            //             value: 'Monday'
-            //         },
-            //         {
-            //             label: 'Wednesday',
-            //             value: 'Wednesday'
-            //         },
-            //         {
-            //             label: 'Friday',
-            //             value: 'Friday'
-            //         }
-            //     ];
-            // } else {
-            //     valuesCollection = [
-            //         {
-            //             label: 'Today',
-            //             value: 'Today'
-            //         },
-            //         {
-            //             label: 'Tomorrow',
-            //             value: 'Tomorrow'
-            //         }
-            //     ];
-            // }
-
-            // console.log(quoteVendors);
-            // console.log(vendorsCollection);
-            // console.log(valuesCollection);
 
             self.updateDropdown(vendorsCollection);
         },

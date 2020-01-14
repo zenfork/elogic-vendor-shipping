@@ -1,12 +1,18 @@
 <?php
 namespace Elogic\VendorShipping\Plugin\Checkout\Model;
+use Elogic\Vendor\Api\VendorRepositoryInterface;
+use Magento\Checkout\Model\DefaultConfigProvider;
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Class DefaultConfigProvider
+ * Class DefaultConfigProviderPlugin
  * @package Elogic\VendorShipping\Plugin\Checkout\Model
  */
-class DefaultConfigProvider
+class DefaultConfigProviderPlugin
 {
     /**
      * @var CheckoutSession
@@ -14,17 +20,17 @@ class DefaultConfigProvider
     protected $checkoutSession;
 
     /**
-     * @var \Elogic\Vendor\Api\VendorRepositoryInterface
+     * @var VendorRepositoryInterface
      */
     private $vendorRepository;
 
     /**
-     * @var \Magento\Framework\Api\SearchCriteriaBuilder
+     * @var SearchCriteriaBuilder
      */
     protected $searchCriteriaBuilder;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
     protected $storeManager;
 
@@ -32,15 +38,15 @@ class DefaultConfigProvider
      * Constructor
      *
      * @param CheckoutSession $checkoutSession
-     * @param \Elogic\Vendor\Api\VendorRepositoryInterface $vendorRepository
-     * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param VendorRepositoryInterface $vendorRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param $storeManager
      */
     public function __construct(
         CheckoutSession $checkoutSession,
-        \Elogic\Vendor\Api\VendorRepositoryInterface $vendorRepository,
-        \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        VendorRepositoryInterface $vendorRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        StoreManagerInterface $storeManager
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->vendorRepository = $vendorRepository;
@@ -49,29 +55,34 @@ class DefaultConfigProvider
     }
 
     /**
-     * @param \Magento\Checkout\Model\DefaultConfigProvider $subject
+     * @param DefaultConfigProvider $subject
      * @param array $result
      * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function afterGetConfig(
-        \Magento\Checkout\Model\DefaultConfigProvider $subject,
+        DefaultConfigProvider $subject,
         array $result
     ) {
-        // Vendors data
         $vendors_id = [];
         $items = $result['totalsData']['items'];
+
+        // Getting vendors info from items
         foreach ($items as $index => $item) {
             $quoteItem = $this->checkoutSession->getQuote()->getItemById($item['item_id']);
             $vendors_id[] = explode(',', $quoteItem->getProduct()
                 ->getData('elogic_vendor'));
         }
+
+        // Filter vendors that only have intersect by items
         if (count($vendors_id) > 1) {
             $vendors_id = call_user_func_array('array_intersect', $vendors_id);
         } else {
             $vendors_id = reset($vendors_id);
         }
+
+        // Getting info for founded vendors
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter('id', $vendors_id, 'in')
             ->create();

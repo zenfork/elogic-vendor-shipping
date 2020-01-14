@@ -9,11 +9,26 @@ use Magento\Framework\Exception\NotFoundException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
-class OrderSave
+/**
+ * Class OrderSavePlugin
+ * @package Elogic\VendorShipping\Plugin\Order\Model
+ */
+class OrderSavePlugin
 {
+    /**
+     * @var OrderVendorShippingRepositoryInterface
+     */
     private $orderVendorShippingRepository;
+    /**
+     * @var QuoteVendorShippingRepositoryInterface
+     */
     private $quoteVendorShippingRepository;
 
+    /**
+     * OrderSavePlugin constructor.
+     * @param OrderVendorShippingRepositoryInterface $orderVendorShippingRepository
+     * @param QuoteVendorShippingRepositoryInterface $quoteVendorShippingRepository
+     */
     public function __construct(
         OrderVendorShippingRepositoryInterface $orderVendorShippingRepository,
         QuoteVendorShippingRepositoryInterface $quoteVendorShippingRepository
@@ -23,19 +38,26 @@ class OrderSave
         $this->quoteVendorShippingRepository = $quoteVendorShippingRepository;
     }
 
+    /**
+     * @param OrderRepositoryInterface $subject
+     * @param OrderInterface $resultOrder
+     * @return OrderInterface
+     * @throws CouldNotSaveException
+     */
     public function afterSave(
         OrderRepositoryInterface $subject,
         OrderInterface $resultOrder
     ) {
-        try {
-            $resultOrder = $this->saveVendorShippingAttribute($resultOrder);
-        } catch (CouldNotSaveException $e) {
-            // TODO
-        }
+        $resultOrder = $this->saveVendorShippingAttribute($resultOrder);
 
         return $resultOrder;
     }
 
+    /**
+     * @param OrderInterface $order
+     * @return OrderInterface
+     * @throws CouldNotSaveException
+     */
     private function saveVendorShippingAttribute(OrderInterface $order)
     {
         $extensionAttributes = $order->getExtensionAttributes();
@@ -55,7 +77,10 @@ class OrderSave
                 $this->orderVendorShippingRepository->save($orderVendorShipping);
             } catch (\Exception $e) {
                 throw new CouldNotSaveException(
-                    __('Could not add attribute to order: "%1"', $e->getMessage()),
+                    __(
+                        'Could not add vendor shipping attribute to order: "%1"',
+                        $e->getMessage()
+                    ),
                     $e
                 );
             }
