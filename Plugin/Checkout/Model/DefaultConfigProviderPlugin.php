@@ -71,8 +71,7 @@ class DefaultConfigProviderPlugin
         // Getting vendors info from items
         foreach ($items as $index => $item) {
             $quoteItem = $this->checkoutSession->getQuote()->getItemById($item['item_id']);
-            $vendors_id[] = explode(',', $quoteItem->getProduct()
-                ->getData('elogic_vendor'));
+            $vendors_id[] = explode(',', $quoteItem->getProduct()->getElogicVendor());
         }
 
         // Filter vendors that only have intersect by items

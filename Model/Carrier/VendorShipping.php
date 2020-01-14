@@ -21,11 +21,6 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
     const VENDOR_SHIPPING_STANDARD = 'vendorshippingstandard';
 
     /**
-     * Vendor shipping 48h code
-     */
-    const VENDOR_SHIPPING_48H = 'vendorshipping48h';
-
-    /**
      * @var string
      */
     protected $_code = self::CARRIER_CODE;
@@ -82,7 +77,6 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
         $result = $this->_rateResultFactory->create();
 
         $this->appendMethodToRateResult(self::VENDOR_SHIPPING_STANDARD, $result);
-//        $this->appendMethodToRateResult(self::VENDOR_SHIPPING_48H, $result);
 
         return $result;
     }
@@ -93,7 +87,6 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
     public function getAllowedMethods() {
         return [
             self::VENDOR_SHIPPING_STANDARD => $this->getConfigData(self::VENDOR_SHIPPING_STANDARD . '/title'),
-//            self::VENDOR_SHIPPING_48H => $this->getConfigData(self::VENDOR_SHIPPING_48H . '/title'),
         ];
     }
 

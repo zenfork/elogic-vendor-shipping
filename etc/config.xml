@@ -6,17 +6,13 @@
                 <title>Vendor Shipping</title>
                 <sallowspecific>0</sallowspecific>
                 <showmethod>0</showmethod>
-                <specificerrmsg>The Vendor shipping is not available.</specificerrmsg>
+                <specificerrmsg>The Vendor Shipping is not available.</specificerrmsg>
                 <sort_order>10</sort_order>
                 <model>Elogic\VendorShipping\Model\Carrier\VendorShipping</model>
                 <vendorshippingstandard>
-                    <title><![CDATA[VendorShipping Standard]]></title>
+                    <title><![CDATA[Standard]]></title>
                     <shippingcost>4.99</shippingcost>
                 </vendorshippingstandard>
-                <vendorshipping48h>
-                    <title><![CDATA[VendorShipping 48h]]></title>
-                    <shippingcost>9.99</shippingcost>
-                </vendorshipping48h>
             </vendorshipping>
         </carriers>
     </default>
