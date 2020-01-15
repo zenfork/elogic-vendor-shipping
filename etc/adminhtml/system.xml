@@ -1,59 +1,40 @@
-<config>
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <section id="carriers">
-            <group id="vendorshipping">
-                <label>Vendor Shipping</label>
-                <field id="active" type="select">
+            <group id="vendorshipping" translate="label" type="text" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Vendor Shipping Module</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="title" type="text">
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Title</label>
                 </field>
-                <field id="sallowspecific" type="select">
+                <field id="name" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Method Name</label>
+                </field>
+                <field id="shipping_cost" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Shipping Cost</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="sallowspecific" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Ship to Applicable Countries</label>
                     <frontend_class>shipping-applicable-country</frontend_class>
                     <source_model>Magento\Shipping\Model\Config\Source\Allspecificcountries</source_model>
                 </field>
-                <field id="specificcountry" type="multiselect">
+                <field id="specificcountry" translate="label" type="multiselect" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Ship to Specific Countries</label>
-                    <can_be_empty>1</can_be_empty>
                     <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                    <can_be_empty>1</can_be_empty>
                 </field>
-                <field id="showmethod" type="select">
+                <field id="showmethod" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Show Method if Not Applicable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <frontend_class>shipping-skip-hide</frontend_class>
                 </field>
-                <field id="specificerrmsg" type="textarea">
-                    <label>Displayed Error Message</label>
-                </field>
-                <field id="sort_order" type="text">
+                <field id="sort_order" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Sort Order</label>
-                    <validate>validate-number validate-zero-or-greater</validate>
-                </field>
-            </group>
-            <!-- The "VendorShipping Standard" specific options -->
-            <group id="vendorshippingstandard">
-                <label><![CDATA[The "VendorShipping Standard" shipping method]]></label>
-                <fieldset_css>complex</fieldset_css>
-                <field id="title" type="text">
-                    <label><![CDATA[Title]]></label>
-                </field>
-                <field id="shippingcost" type="text">
-                    <label><![CDATA[Shipping Cost]]></label>
-                    <validate>validate-number validate-zero-or-greater</validate>
-                </field>
-            </group>
-            <!-- The "VendorShipping 48h" specific options -->
-            <group id="vendorshipping48h">
-                <label><![CDATA[The "VendorShipping 48h" shipping method]]></label>
-                <fieldset_css>complex</fieldset_css>
-                <field id="title" type="text">
-                    <label><![CDATA[Title]]></label>
-                </field>
-                <field id="shippingcost" type="text">
-                    <label><![CDATA[Shipping Cost]]></label>
-                    <validate>validate-number validate-zero-or-greater</validate>
                 </field>
             </group>
         </section>

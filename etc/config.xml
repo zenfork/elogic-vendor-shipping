@@ -1,18 +1,15 @@
-<config>
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
     <default>
         <carriers>
             <vendorshipping>
-                <active>1</active>
+                <active>0</active>
                 <title>Vendor Shipping</title>
                 <sallowspecific>0</sallowspecific>
                 <showmethod>0</showmethod>
                 <specificerrmsg>The Vendor Shipping is not available.</specificerrmsg>
-                <sort_order>10</sort_order>
+                <sort_order>15</sort_order>
                 <model>Elogic\VendorShipping\Model\Carrier\VendorShipping</model>
-                <vendorshippingstandard>
-                    <title><![CDATA[Standard]]></title>
-                    <shippingcost>4.99</shippingcost>
-                </vendorshippingstandard>
             </vendorshipping>
         </carriers>
     </default>

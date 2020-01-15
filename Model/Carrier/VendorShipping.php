@@ -1,29 +1,20 @@
 <?php
 namespace Elogic\VendorShipping\Model\Carrier;
 
-use Elogic\Vendor\Helper\Data;
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Shipping\Model\Carrier\AbstractCarrier;
+use Magento\Shipping\Model\Carrier\CarrierInterface;
 
 /**
  * Class VendorShipping
  * @package Elogic\VendorShipping\Model\Carrier
  */
-class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
-    \Magento\Shipping\Model\Carrier\CarrierInterface {
-    /**
-     * Carrier code
-     */
-    const CARRIER_CODE = 'vendorshipping';
-
-    /**
-     * Vendor shipping standard code
-     */
-    const VENDOR_SHIPPING_STANDARD = 'vendorshippingstandard';
-
+class VendorShipping extends AbstractCarrier implements CarrierInterface
+{
     /**
      * @var string
      */
-    protected $_code = self::CARRIER_CODE;
+    protected $_code = 'vendorshipping';
 
     /**
      * @var bool
@@ -33,15 +24,14 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
     /**
      * @var \Magento\Shipping\Model\Rate\ResultFactory
      */
-    protected $_rateResultFactory;
+    private $rateResultFactory;
 
     /**
      * @var \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory
      */
-    protected $_rateMethodFactory;
+    private $rateMethodFactory;
 
     /**
-     * VendorShipping constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
      * @param \Psr\Log\LoggerInterface $logger
@@ -50,7 +40,6 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory,
         \Psr\Log\LoggerInterface $logger,
@@ -58,25 +47,42 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
         \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
         array $data = []
     ) {
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->_rateResultFactory = $rateResultFactory;
-        $this->_rateMethodFactory = $rateMethodFactory;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
+
+        $this->rateResultFactory = $rateResultFactory;
+        $this->rateMethodFactory = $rateMethodFactory;
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Address\RateRequest $request
-     * @return bool|\Magento\Framework\DataObject|\Magento\Shipping\Model\Rate\Result|null
+     * Custom Shipping Rates Collector
+     *
+     * @param RateRequest $request
+     * @return \Magento\Shipping\Model\Rate\Result|bool
      */
-    public function collectRates(\Magento\Quote\Model\Quote\Address\RateRequest $request)
+    public function collectRates(RateRequest $request)
     {
         if (!$this->getConfigFlag('active')) {
             return false;
         }
-        /** @var \Magento\Shipping\Model\Rate\Result $result */
-        $result = $this->_rateResultFactory->create();
 
-        $this->appendMethodToRateResult(self::VENDOR_SHIPPING_STANDARD, $result);
+        /** @var \Magento\Shipping\Model\Rate\Result $result */
+        $result = $this->rateResultFactory->create();
+
+        /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
+        $method = $this->rateMethodFactory->create();
+
+        $method->setCarrier($this->_code);
+        $method->setCarrierTitle($this->getConfigData('title'));
+
+        $method->setMethod($this->_code);
+        $method->setMethodTitle($this->getConfigData('name'));
+
+        $shippingCost = (float)$this->getConfigData('shipping_cost');
+
+        $method->setPrice($shippingCost);
+        $method->setCost($shippingCost);
+
+        $result->append($method);
 
         return $result;
     }
@@ -84,51 +90,8 @@ class VendorShipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier imp
     /**
      * @return array
      */
-    public function getAllowedMethods() {
-        return [
-            self::VENDOR_SHIPPING_STANDARD => $this->getConfigData(self::VENDOR_SHIPPING_STANDARD . '/title'),
-        ];
-    }
-
-    /**
-     * @param $method
-     * @return false|string
-     */
-    private function getMethodTitle($method) {
-        return $this->getConfigData($method . '/title');
-    }
-
-    /**
-     * @param $method
-     * @return false|string
-     */
-    private function getMethodPrice($method) {
-        return $this->getMethodCost($method);
-    }
-
-    /**
-     * @param $method
-     * @return false|string
-     */
-    private function getMethodCost($method) {
-        return $this->getConfigData($method . '/shippingcost');
-    }
-
-    /**
-     * @param string $methodName
-     * @param \Magento\Shipping\Model\Rate\Result $result
-     * @return \Magento\Shipping\Model\Rate\Result
-     */
-    private function appendMethodToRateResult($methodName, $result) {
-        /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
-        $method = $this->_rateMethodFactory->create();
-        $method->setCarrier($this->_code);
-        $method->setCarrierTitle($this->getConfigData('title'));
-        $method->setMethod($methodName);
-        $method->setMethodTitle($this->getMethodTitle($method->getMethod()));
-        $method->setPrice($this->getMethodPrice($method->getMethod()));
-        $method->setCost($this->getMethodCost($method->getMethod()));
-        $method->setErrorMessage(__('The %1 method error message here.'));
-        return $result->append($method);
+    public function getAllowedMethods()
+    {
+        return [$this->_code => $this->getConfigData('name')];
     }
 }
