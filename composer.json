@@ -1,19 +1,19 @@
 {
-  "name": "zenfork/module-elogic-vendor-shipping",
-  "description": "The Vendor shipping method",
-  "require": {
-    "php": "7.0.2|7.0.4|~7.0.6|~7.1.0"
-  },
+  "name": "zenfork/elogic-vendor-shipping",
+  "description": "A Magento 2 module that adds Vendor Shipping",
   "type": "magento2-module",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "license": [
     "OSL-3.0",
     "AFL-3.0"
   ],
+  "require": {
+    "php": ">=7.0",
+    "magento/framework": ">=100.0.4",
+    "zenfork/elogic-vendor": ">=0.0.3"
+  },
   "autoload": {
-    "files": [
-      "registration.php"
-    ],
+    "files": [ "registration.php" ],
     "psr-4": {
       "Elogic\\VendorShipping\\": ""
     }
